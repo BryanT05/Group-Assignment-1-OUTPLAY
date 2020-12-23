@@ -196,6 +196,7 @@ int main (){
     }
 
 //  cuma ngetes functionnya
+    // disini, user sebagai yang sedang Log In, gua gatau nama Node nya kalian namain apa. Jadi sementara gua namain User
     AddFriend (user);
     AddFriend (user);
     AddFriend (user);
