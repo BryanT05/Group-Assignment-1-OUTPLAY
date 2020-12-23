@@ -5,6 +5,7 @@
 struct Node {
     char username [255];
     Node *next;
+    Node *prev;
 
     int totalfriends;
     Node *friends[100];
@@ -18,11 +19,14 @@ struct Node {
 
 Node *createNode (const char name[]){
     Node *newNode = (Node*) malloc (sizeof(Node));
+
     strcpy (newNode ->username, name);
     newNode -> totalfriends = 0;
     newNode -> totalInbox = 0;
     newNode -> totalSentRequest = 0;
-    newNode-> next = newNode-> friends[0] = NULL;
+    newNode-> friends[0] = NULL;
+
+    newNode-> next = newNode->prev = NULL;
     return newNode;
 }
 
@@ -34,6 +38,7 @@ void pushHead (const char name[]){
     }
     else { 
         temp->next =  head;
+        head->prev = temp;
         head = temp;
     }
 }
@@ -45,42 +50,9 @@ void pushTail (const char name[]){
         head= tail = temp;
     }
     else { 
+        temp->prev = tail;
         tail->next = temp;
         tail =  temp;
-    }
-}
-
-void popHead (){
-    if (!head){
-        return;
-    } else if (head==tail) {
-        free(head);
-        head = tail = NULL;
-    }
-    else {
-        Node *temp = head;
-        head = temp->next; 
-        free(temp);
-        temp->next = NULL;
-    }
-}
-
-void popTail (){
-    if (!head){
-        return;
-    }
-    else if (head==tail){
-        head = tail = NULL;
-        free(head);
-    }
-    else {
-        Node *temp = head; 
-        while (temp->next != tail){
-            temp = temp->next;
-        }              
-        temp->next = NULL;
-        free(tail); 
-        tail = temp; 
     }
 }
 
@@ -96,7 +68,15 @@ void printLinkedList (){
 }
 
 // FUNCTION UNTUK FRIENDS MANAGEMENT
-void AddFriend (Node *user){
+void AddFriend (const char temp2[]){
+    Node *user = head;
+    while (user){
+        if (strcmp (temp2, user->username)==0){
+            break;
+        }
+        user= user->next;
+    }
+
     Node *temp = head;
     int no = 1;
     printf ("\n[All User]\nNo. Username\n");
@@ -132,8 +112,16 @@ void AddFriend (Node *user){
     printf("Press enter to continue!\n");
 }
 
-void viewInbox (Node *user){
-    
+void viewInbox (const char temp2[]){
+    Node *user = head;
+    while (user){
+        if (strcmp (temp2, user->username)==0){
+            break;
+        }
+        user= user->next;
+    }
+
+
     printf ("\n[All Friend Request of %s]\n", user->username);
     printf ("No. Userame\n");
     for (int i=0; i < user->totalInbox; i++){
@@ -148,10 +136,27 @@ void viewInbox (Node *user){
             user->friends[user->totalfriends] = user->inbox[i];
             user->inbox[i]->friends[user->inbox[i]->totalfriends] = user;
             user->totalfriends++;
+            user->inbox[i]->totalfriends++;
             printf ("\n--You accepted the request from %s--\n", user->inbox[i]->username);
             flag = 0;
-            user->inbox[i]->totalfriends++;user->inbox[i] = NULL;
-            user->inbox[i] = NULL;
+
+            int index=0;
+            for (int j=0; j<user->inbox[i]->totalSentRequest; j++){
+                if (strcmp (user->username, user->inbox[i]->request[j]->username)==0){
+                    index=j;
+                }
+            }
+            user->inbox[i]->totalSentRequest--;
+            for (int j=index; j<user->inbox[i]->totalSentRequest; j++){
+                user->inbox[i]->request[j] = user->inbox[i]->request[j+1];
+            }
+            user->inbox[i]->request[user->inbox[i]->totalSentRequest]==NULL;
+
+            user->totalInbox--;
+            for (int j=i; j<user->totalInbox; j++){
+                user->inbox[j]= user->inbox[j+1];
+            }
+            user->inbox[user->totalInbox]= NULL;
             break;
         }
     }
@@ -161,9 +166,16 @@ void viewInbox (Node *user){
     printf ("Press enter to continue!\n");
 }
 
-void viewSentRequest (Node *user){
+void viewSentRequest (const char temp2[]){
+    Node *user = head;
+    while (user){
+        if (strcmp (temp2, user->username)==0){
+            break;
+        }
+        user= user->next;
+    }
 
-    printf ("\n[Your Sent Request]\n");
+    printf ("\n[%s's Sent Request]\n", user->username);
     if(user->totalSentRequest==0){
         printf ("No Name\n");
     } 
@@ -175,6 +187,55 @@ void viewSentRequest (Node *user){
     }
 }
 
+void printFriends (const char temp2[]){
+    Node *user = head;
+    while (user){
+        if (strcmp (temp2, user->username)==0){
+            break;
+        }
+        user= user->next;
+    }
+    printf ("\n[All Friends of %s]\nNo. Username\n", user->username);
+    if (user->totalfriends==0){
+        printf ("None\n");
+    }
+    else {
+        for (int i=0; i<user->totalfriends; i++){
+            printf ("%d   %s\n", i+1, user->friends[i]->username);
+        }
+    }
+}
+
+void removeFriend (const char temp2[]){
+    Node *user = head;
+    while (user){
+        if (strcmp (temp2, user->username)==0){
+            break;
+        }
+        user= user->next;
+    }
+    printFriends(user->username);
+    printf ("\nWhich user do you want to remove?\n>>");
+    char temp [255];
+    int flag=1;
+    scanf ("%[^\n]", &temp); getchar ();
+    for (int i=0; i<user->totalfriends; i++){
+        if (strcmp(temp, user->friends[i]->username)==0){
+            flag=0;
+            for (int j=i; j<user->totalfriends-1; j++){
+                user->friends[j]=user->friends[j+1];
+            }
+            user->friends[user->totalfriends-1]=NULL;
+            user->totalfriends--;
+            printf ("\n-- You are no longer friends with %s --\n", temp);
+            break; 
+        }
+    }
+    if (flag) printf ("\nThere is no %s in your Firend List\n", temp);
+    printf("Press enter to continue!\n");
+}
+
+
 int main (){
     // cuma bikin data nya aja
     pushTail ("romario");
@@ -183,7 +244,7 @@ int main (){
     pushTail ("codewiz");
     printLinkedList ();
 
-//  cuma untuk tau log in as ... (Contoh doang)
+//  ABAIKAN INI!!!!!!!!!!!!!!!!
     printf ("log in as : ");
     char temp[100];
     scanf("%s", &temp);  getchar ();
@@ -196,13 +257,13 @@ int main (){
     }
 
 //  cuma ngetes functionnya
-    // disini, user sebagai yang sedang Log In, gua gatau nama Node nya kalian namain apa. Jadi sementara gua namain User
-    AddFriend (user);
-    AddFriend (user);
-    AddFriend (user);
-    viewSentRequest (user);
+    // disini, user sebagai yang sedang Log In, PASSING PARAMETER nya adalah const char dari username yang lagi log in (user1->username)
+    AddFriend (user->username);
+    AddFriend (user->username);
+    AddFriend (user->username);
+    viewSentRequest (user->username);
 
-//  cuma coba log in as ... user 2
+//  ABAIKAN INI!!!!!!!!!!!!!!!!!!!!!
     printf ("\nlog in as : ");
     scanf("%s", &temp);  getchar ();
     Node *user2 = head;
@@ -212,18 +273,36 @@ int main (){
         }
         user2= user2->next;
     }
+    //  untuk cek inbox nya user 2, PASSING PARAMETER nya adalah const char dari username yang lagi log in (user2->username)
+    viewInbox (user2->username);
+    viewSentRequest (user->username);
+    AddFriend (user2->username);
 
-//  coba cek inbox nya user 2
-    viewInbox (user2);
-
-
-//  coba ngetes print friendlist 1 ama 2
-    for (int i=0; i<user2->totalfriends; i++){
-        printf ("temen %s : %s\n", user2->username, user2->friends[i]->username);
+    // ABAIKAN INI!!!!!!!!!!!!!!
+    printf ("\nlog in as : ");
+    scanf("%s", &temp);  getchar ();
+    Node *user3 = head;
+    while (user3){
+        if (strcmp (temp, user3->username)==0){
+            break;
+        }
+        user3= user3->next;
     }
 
-    for (int i=0; i<user->totalfriends; i++){
-        printf ("temen %s : %s\n",user->username, user->friends[i]->username);
-    }
+    viewInbox (user3->username);
+    viewSentRequest (user->username);
+    viewInbox (user3->username);
+    viewSentRequest (user2->username);
+    
+    
+
+//  coba ngetes print friendlist 3 sebelum remove
+    printFriends (user3->username);
+
+    removeFriend (user3->username);
+//  coba ngetes print friendlist 3 setelah remove friend
+    printf ("Setelah remvoe Friend:\n");
+    printFriends (user3->username);
+    
     return 0;
 }
