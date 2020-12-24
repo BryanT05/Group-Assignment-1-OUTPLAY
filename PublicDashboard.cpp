@@ -13,11 +13,13 @@ struct Node{
   int totalInbox;
   int priv;
   int numpriv;
+  int likes;
   char privFriends[2][100];
   Node *next;
   char Note[260];
   char RecNote[260];
   char category[20];
+  char comment[260];
   int val;
   int stats;
 }*tail, *head;
@@ -28,6 +30,8 @@ Node *createNode (const char name[]){
     strcpy(newNode->Note, '\0');
     strcpy(newNode->RecNote, '\0');
     strcpy(newNode->category, '\0');
+    strcpy(newNode->comment, "\0");
+    newNode->likes = 0;
     newNode->stats = 0;
     newNode->priv = 0; // 1 artinya private, 0 artinya public
     newNode->numpriv=0;
