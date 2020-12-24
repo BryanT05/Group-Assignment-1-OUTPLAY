@@ -109,6 +109,8 @@ void tempdashboard(const char *username) {
     curr3 = curr3->next;
   }
   puts("====================================");
+  printf("Comments:\n");
+  commentNote(username);
 }
 
 void addNote(const char *username) {
@@ -282,6 +284,56 @@ void privateAccount(const char *username) {
   return;
 }
 
+void commentNote(const char *username){
+  Node *curr = head;
+  while(curr) {
+    if(strcmp(curr->username, username) == 0)break;
+    curr = curr->next;
+  }
+  if(curr != curr->next){
+    printf("No other users\n");
+  } else if(!curr->comment){
+    printf("Write a comment: \n");
+    scanf("%[^\n]", curr->comment);
+    printf("Do you want to like this comment ?\nY/N");
+    char yesNO;
+    scanf("%c", &yesNO);
+    if(yesNO=='Y'){
+      curr->likes++;
+    } else if(yesNO=='N'){
+      return;
+    }
+  } else{
+    displayComment(username);
+    printf("Write a comment: \n");
+    scanf("%[^\n]", curr->comment);
+    printf("Do you want to like this comment ?\nY/N");
+    char yesNO;
+    scanf("%c", &yesNO);
+    if(yesNO=='Y'){
+      curr->likes++;
+    } else if(yesNO=='N'){
+      return;
+    }
+  }
+}
+
+void displayComment(const char *username){
+  Node *curr = head;
+  while(curr) {
+    if(strcmp(curr->username, username) == 0)break;
+    curr = curr->next;
+  }
+  printf("%s\n", curr->comment);
+  printf("Do you want to like this comment ?\nY/N");
+  char yesNO;
+  scanf("%c", &yesNO);
+  if(yesNO=='Y'){
+    curr->likes++;
+  } else if(yesNO=='N'){
+    return;
+  }
+}
 
 void dashboard(const char *username) {
   tempdashboard(username);
