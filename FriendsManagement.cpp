@@ -81,18 +81,24 @@ void AddFriend (const char temp2[]){
 
     Node *temp = head;
     int no = 1;
+    int pass=1;
     printf ("\n[All User]\nNo. Username\n");
     while (temp){
         if (strcmp(temp->username, user->username)!=0){
             printf ("%d   %s\n", no, temp->username);
             no++;
+            pass=0;
         }
         temp = temp->next;
     }
     puts ("");
     char newfriend [255];
-    printf("Which user do you want to add?\n>>");
-    scanf ("%s", &newfriend);getchar ();
+    if (pass!=0){
+        printf ("There is no User!\n");
+    }else {
+        printf("Which user do you want to add?\n>>");
+        scanf ("%s", &newfriend);getchar ();
+    }
     
     int flag=1;
     Node *curr = head;
@@ -108,7 +114,7 @@ void AddFriend (const char temp2[]){
         }
         curr= curr->next;
     }
-    if (flag){
+    if (flag && pass == 0){
         printf ("\n--There is no %s in User List\n", newfriend);
     }
     printf("Press enter to continue!\n");
@@ -129,9 +135,14 @@ void viewInbox (const char temp2[]){
     for (int i=0; i < user->totalInbox; i++){
         if (user->inbox[i]->username!= NULL) printf("%d   %s\n", i+1, user->inbox[i]->username);
     }
-    printf ("\nWhich user do you want to be accepted?\n>>");
     char temp[255];
-    scanf("%[^\n]", &temp); getchar();
+    if (user->totalInbox==0){
+        printf ("Your Inbox is empty\n");
+    }
+    else {
+        printf ("\nWhich user do you want to be accepted?\n>>");
+        scanf("%[^\n]", &temp); getchar();
+    }
     int flag =1;
     for (int i=0; i< user->totalInbox; i++){
         if (strcmp (temp, user->inbox[i]->username)==0){
@@ -179,7 +190,7 @@ void viewSentRequest (const char temp2[]){
 
     printf ("\n[%s's Sent Request]\n", user->username);
     if(user->totalSentRequest==0){
-        printf ("No Name\n");
+        printf ("Your Sent Request is empty\n");
     } 
     else {
         printf ("No. Username\n");
@@ -199,7 +210,7 @@ void printFriends (const char temp2[]){
     }
     printf ("\n[All Friends of %s]\nNo. Username\n", user->username);
     if (user->totalfriends==0){
-        printf ("None\n");
+        printf ("You have no Friends yet\n");
     }
     else {
         for (int i=0; i<user->totalfriends; i++){
@@ -217,10 +228,15 @@ void removeFriend (const char temp2[]){
         user= user->next;
     }
     printFriends(user->username);
-    printf ("\nWhich user do you want to remove?\n>>");
     char temp [255];
     int flag=1;
-    scanf ("%[^\n]", &temp); getchar ();
+    if (user->totalfriends == 0){
+        flag = -1;
+    }else {
+        printf ("\nWhich user do you want to remove?\n>>");
+        scanf ("%[^\n]", &temp); getchar ();
+    }
+
     for (int i=0; i<user->totalfriends; i++){
         if (strcmp(temp, user->friends[i]->username)==0){
             flag=0;
@@ -233,7 +249,7 @@ void removeFriend (const char temp2[]){
             break; 
         }
     }
-    if (flag) printf ("\nThere is no %s in your Firend List\n", temp);
+    if (flag==0) printf ("\nThere is no %s in your Firend List\n", temp);
     printf("Press enter to continue!\n");
 }
 
