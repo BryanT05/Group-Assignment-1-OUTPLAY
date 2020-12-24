@@ -53,6 +53,18 @@ int authen(const char *username){
   return flag;
 }
 
+int autenPassword(const char *password){
+  int flag = 0;
+  int len = strlen(password);
+  for(int i = 0;i<len;i++){
+    if(!(password[i] >= 'a' && password[i] <= 'z')){
+      flag = 1;
+      break;
+    }
+  }
+  return flag;
+}
+
 void regis(){
   char pengguna[255]={0};
   int status = 1;
@@ -63,10 +75,16 @@ void regis(){
     status = authen(pengguna);
     if(status == 1)printf("Invalid username please try again!\n");
   }
+  int statuspass = 1;
   char password[255]={0};
-  printf("Please type in your password [lowercase || 1..24]: ");
-  getchar();
-  scanf("%[^\n]",password);
+  while(statuspass){
+    printf("Please type in your password [lowercase || 1..24]: ");
+    getchar();
+    scanf("%[^\n]",password);
+    statuspass = autenPassword(password);
+    if(statuspass == 1)printf("Invalid password please try again!\n");
+  }
+  
   Node *regis= createNode(pengguna, password);
   if(!head){
     /*cek apakah usernamenya memenuhi ketentuan*/
@@ -80,6 +98,27 @@ void regis(){
     regis->next = NULL;
     user_tail = regis;
   }
+}
+
+void login(){
+  char username[30] = {0};
+  char password[30] = {0};
+  printf("Masukkan Username: ");
+  getchar();
+  scanf("%[^\n]",username);
+  printf("Masukkan Password: ");
+  getchar();
+  scanf("%[^\n]",password);
+  Node *temp = user_head;
+  int success = 0;
+  while(temp){
+    if(strcmp(username,temp->username) == 0){
+      if(strcmp(password,temp->password) == 0){
+        success = 1;
+      }
+    }
+  }
+  // if(success == 1) panggil function selanjutny
 }
 
 void mainMenu(){
@@ -110,7 +149,7 @@ void mainMenu(){
   }else if(input == 1){
     regis();
   }else if(input == 2){
-    // login();
+    login();
   }else if(input == 3){
     return;
   }
