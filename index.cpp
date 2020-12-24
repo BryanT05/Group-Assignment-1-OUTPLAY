@@ -10,13 +10,18 @@ struct Node{
   Node *friends[100];
   int totalFriends;
   Node *inbox[100];
-  int totalInbox;
   Node *request[100];
   int totalSentRequest;
+  int totalInbox;
+  int priv;
+  int numpriv;
+  int likes;
+  char privFriends[2][100];
   Node *next,*prev;
   char Note[260];
   char RecNote[260];
   char category[20];
+  char comment[260];
   int val;
   int stats;
 }*user_tail, *user_head,*curr;
@@ -28,6 +33,10 @@ void AddFriend ();
 void removeFriend();
 void viewInbox();
 void viewSentRequest();
+void mainMenu();
+void dashboard();
+void commentNote();
+void displayComment();
 
 // =================== Main Menu & Authentication =========================
 Node *createNode(const char *username,const char *password){
@@ -218,7 +227,7 @@ void LoginScreen(){
             viewSentRequest();
         }
         else if (input==5){
-            printf("Bukan bagian gue\n");
+            dashboard();
         }
         else if (input==6){
             return;
@@ -226,6 +235,293 @@ void LoginScreen(){
 
   printf("-----------------------------------------\n");
 }
+// ================== Public Dashboard =================
+
+void tempdashboard() {
+  Node *curr1 = curr;
+  
+  printf("Oo================================oO\n");
+  printf("           STUDY NETWORK\n");
+  printf("Oo================================oO\n");
+  if(strcmp(curr1->category, "\0") == 0){
+    printf("There is no announcement.\n");
+  } else {
+    printf("Status: %s\n", curr1->category);
+  }
+  puts("====================================");
+  printf("Notes:\n");
+  int i=1;
+  Node *curr2 = curr;
+  printf("Announced:\n");
+  puts("------------------------------------"); 
+  while(curr2) {
+    if(curr2->stats == 1) {
+      if(curr2->priv == 0) {
+      printf("%d. %s : %s\n", i, curr2->username, curr2->Note);
+      i++;
+      }else {
+        int flag = 0;
+        for(int i=0; i<curr2->numpriv; i++) {
+          if(strcpy(curr2->privFriends[i], curr->username) == 0){
+            flag = 1;
+            break;
+          }
+        }
+        if(flag == 1) {
+          printf("%d. %s : %s(private)\n", i, curr2->username, curr2->Note);
+          i++;
+        } else {
+          continue;
+        }
+      }
+    }
+    curr2 = curr2->next;
+  }
+  puts("------------------------------------");
+  Node *curr3 = user_head;
+  int j = 1;
+  while(curr3) {
+    if(curr3->stats == 0) {
+      if(curr2->priv == 0) {
+      printf("%d. %s : %s\n", j, curr3->username, curr3->Note);
+      j++;
+      }else {
+        int flag = 0;
+        for(int i=0; i<=curr3->numpriv; i++) {
+          if(strcpy(curr3->privFriends[i], curr->username) == 0){
+            flag = 1;
+            break;
+          }
+        }
+        if(flag == 1) {
+          printf("%d. %s : %s(private)\n", i, curr3->username, curr3->Note);
+          j++;
+        } else {
+          continue;
+        }
+      }      
+    }
+    curr3 = curr3->next;
+  }
+  puts("====================================");
+  printf("Comments:\n");
+  commentNote();
+}
+
+void addNote() {
+  Node *curr1 = curr;
+  
+  int flag = 0;
+  if(strcmp(curr1->Note, "\0") == 0) {
+    flag = 1;
+  }
+  if(flag == 0) {
+    tempdashboard();
+    printf("Please input your new note:");
+  } else {
+    tempdashboard();
+    printf("Please input the note you want to replace:");
+  }
+  char note[255];
+  scanf("%[^\n]", note);
+  strcpy(curr1->Note, note);
+  strcpy(curr1->RecNote,note);
+  
+}
+
+void editNote() {
+  Node *curr1 = curr;
+  
+  if(strcmp(curr1->Note, "\0") == 0) {
+    printf("No notes to edit\n");
+    dashboard();
+  }
+
+  char note[260];
+  printf("Current Note:%s\n", curr1->Note);
+  printf("Input New Note:");
+  scanf("%[^\n]", &note);
+  strcpy(curr1->Note, note);
+  strcpy(curr1->RecNote, note);
+  return;
+} 
+
+void deleteNote() {
+  Node *curr1 = curr;
+  
+  if(strcmp(curr1->Note, "\0") == 0) {
+    printf("No Notes to be Deleted.\n");
+    dashboard();
+    return;
+  }
+  curr1 = user_head;
+  while(curr1) {
+    if(strcmp(curr1->username, curr->username) == 0) {
+      break;
+    }
+    curr1 = curr1->next;
+  }
+  strcpy(curr1->Note, " ");
+}
+
+void recoverNote() {
+  Node *curr1 = curr;
+  
+  strcpy(curr1->Note, curr1->RecNote);
+  printf("Your note has been recovered.\n");
+  printf("Your note: %s\n", curr1->Note);
+}
+
+void category() {
+  Node *curr1 = curr;
+
+  printf("[1] Backlog\n[2] In Progress\n[3] Peer Review\n[4]In Test\n[5] Done\n[6] Blocked\n");
+  printf("Choose your category:\n");
+  int scan;
+  scanf("%d", &scan);
+  if(scan == 1) {
+    strcpy(curr1->category, "Backlog");
+  }else if(scan ==2) {
+    strcpy(curr1->category, "In Progress");
+  }else if(scan == 3){
+    strcpy(curr1->category, "Peer Review");
+  }else if(scan == 4) {
+    strcpy(curr1->category, "In Test");
+  }else if(scan == 5) {
+    strcpy(curr1->category, "Done");
+  }else if(scan == 6) {
+    strcpy(curr1->category, "Blocked");
+  }else {
+    printf("Invalid input, please try again.\n");
+    printf("Please press enter to continue");
+    char enter[3];
+    scanf("%[^\n]", enter);
+    category();
+  }
+  return;
+}
+
+void announceNote() {
+  Node *curr1 = curr;
+  
+  printf("Do you want to announce your note?\n");
+  printf("[1] Announce\n[2] Cancel\n");
+  printf("Choose your option:");
+  int n;
+  scanf("%d", &n);
+  if(n == 1) {
+    curr1->stats = 1;
+    printf("Your note has been announced\n");
+  }else if(n == 2) {
+    dashboard();
+  }else {
+    puts("Invalid username, please try again.");
+    announceNote();
+  }
+}
+
+void privateAccount() {
+  Node *curr1 = curr;
+  
+  curr1->priv = 1;
+  if(curr1->numpriv < 2) {
+    printf("Please input the unique username you want your note avaialble to:");
+    char name[260];
+    int flag = 0;
+    scanf("%[^\n]", name);
+    for(int i = 0; i<curr1->numpriv; i++) {
+      if(strcmp(curr1->privFriends[i], name) == 0){
+        puts("This username has already been on your private list.\n");
+        flag = 1;
+        break;
+      }
+    }
+    if(flag == 1) {
+      strcpy(curr1->privFriends[curr1->numpriv], name);
+      curr1->numpriv++;
+    }
+  } else {
+    puts("The lists of private friends are full, please click enter to continue");
+    char enter[3];
+    scanf("%[^\n]", enter);
+    dashboard();
+  }
+  return;
+}
+
+void commentNote(){
+  Node *curr = curr;
+  if(curr != curr->next){
+    printf("No other users\n");
+  } else if(!curr->comment){
+    printf("Write a comment: \n");
+    scanf("%[^\n]", curr->comment);
+    printf("Do you want to like this comment ?\nY/N");
+    char yesNO;
+    scanf("%c", &yesNO);
+    if(yesNO=='Y'){
+      curr->likes++;
+    } else if(yesNO=='N'){
+      return;
+    }
+  } else{
+    displayComment();
+    printf("Write a comment: \n");
+    scanf("%[^\n]", curr->comment);
+    printf("Do you want to like this comment ?\nY/N");
+    char yesNO;
+    scanf("%c", &yesNO);
+    if(yesNO=='Y'){
+      curr->likes++;
+    } else if(yesNO=='N'){
+      return;
+    }
+  }
+}
+
+void displayComment(){
+  printf("%s\n", curr->comment);
+  printf("Do you want to like this comment ?\nY/N");
+  char yesNO;
+  scanf("%c", &yesNO);
+  if(yesNO=='Y'){
+    curr->likes++;
+  } else if(yesNO=='N'){
+    return;
+  }
+}
+
+void dashboard() {
+  tempdashboard();
+  printf("[1] Add\n[2] Edit\n[3] Announce\n[4] Delete Note\n[5] Recover Note\n [6]Update Category\n[7] Private Your Account\n[8] Return\n");
+  printf("Choose Noting Option :");  
+  int choice = 0;
+  scanf("%d", &choice);
+  if(choice == 1) {
+    addNote();
+  } else if(choice == 2) {
+    editNote();
+  } else if(choice == 3) {
+    announceNote(); // belum dikerjain
+  } else if(choice == 4) {
+    deleteNote();
+  } else if(choice == 5) {
+    recoverNote();
+  } else if(choice == 6) {
+    category();
+  } else if(choice == 7) {
+    privateAccount();
+  
+  }else if(choice == 8){
+    //panggil function main beserta username;
+    LoginScreen();
+  } else {
+    printf("Invalid input, please try again.\n");
+    dashboard();
+  }
+  return;
+}
+
 
 // ==================  Friend Management ===============
 
