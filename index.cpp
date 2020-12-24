@@ -474,6 +474,7 @@ void commentNote(){
     printf("No other users\n");
   } else if(!curr->comment){
     printf("Write a comment: \n");
+    getchar();
     scanf("%[^\n]", curr->comment);
     printf("Do you want to like this comment ?\nY/N");
     char yesNO;
@@ -486,6 +487,7 @@ void commentNote(){
   } else{
     displayComment();
     printf("Write a comment: \n");
+    getchar();
     scanf("%[^\n]", curr->comment);
     printf("Do you want to like this comment ?\nY/N");
     char yesNO;
