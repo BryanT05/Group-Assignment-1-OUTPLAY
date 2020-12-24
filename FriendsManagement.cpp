@@ -25,7 +25,9 @@ Node *createNode (const char name[]){
     newNode -> totalInbox = 0;
     newNode -> totalSentRequest = 0;
     newNode-> friends[0] = NULL;
-
+    newNode -> inbox[0]= NULL;
+    newNode ->request[0] =NULL;
+    
     newNode-> next = newNode->prev = NULL;
     return newNode;
 }
