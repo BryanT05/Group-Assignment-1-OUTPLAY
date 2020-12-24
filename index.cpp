@@ -349,7 +349,7 @@ void editNote() {
   char note[260];
   printf("Current Note:%s\n", curr1->Note);
   printf("Input New Note:");
-  scanf("%[^\n]", &note);
+  scanf("%[^\n]", note);
   strcpy(curr1->Note, note);
   strcpy(curr1->RecNote, note);
   return;
@@ -608,7 +608,7 @@ void AddFriend (){
         printf ("There is no User!\n");
     }else {
         printf("Which user do you want to add?\n>>");
-        scanf ("%s", &newfriend);getchar ();
+        scanf ("%s", newfriend);getchar ();
     }
     
     int flag=1;
@@ -649,7 +649,7 @@ void viewInbox(){
     }
     else {
         printf ("\nWhich user do you want to be accepted?\n>>");
-        scanf("%[^\n]", &temp); getchar();
+        scanf("%[^\n]", temp); getchar();
     }
     int flag =1;
     for (int i=0; i< user->totalInbox; i++){
@@ -730,7 +730,7 @@ void removeFriend (){
         flag = -1;
     }else {
         printf ("\nWhich user do you want to remove?\n>>");
-        scanf ("%[^\n]", &temp); getchar ();
+        scanf ("%[^\n]", temp); getchar ();
     }
 
     for (int i=0; i<user->totalFriends; i++){
