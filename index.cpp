@@ -658,7 +658,7 @@ void viewInbox(){
     Node *user = curr;
     
 
-
+    int pass=0;
     printf ("\n[All Friend Request of %s]\n", user->username);
     printf ("No. Userame\n");
     for (int i=0; i < user->totalInbox; i++){
@@ -666,7 +666,8 @@ void viewInbox(){
     }
     char temp[255];
     if (user->totalInbox==0){
-        printf ("Your Inbox is empty\n");
+        printf ("\nYour Inbox is empty\n");
+        pass=1;
     }
     else {
         printf ("\nWhich user do you want to be accepted?\n>>");
@@ -702,7 +703,7 @@ void viewInbox(){
             break;
         }
     }
-    if (flag){
+    if (flag && pass==0){
         printf ("\n--There is no %s in your Friend Request\n", temp);
     }
     printf ("Press enter to continue!\n");
@@ -714,13 +715,14 @@ void viewSentRequest(){
 
     printf ("\n[%s's Sent Request]\n", user->username);
     if(user->totalSentRequest==0){
-        printf ("Your Sent Request is empty\n");
+        printf ("\nYour Sent Request is empty\n");
     } 
     else {
         printf ("No. Username\n");
         for (int i=0; i< user->totalSentRequest; i++){
             printf ("%d   %s\n", i+1, user->request[i]->username);
         }
+        puts ("");
     }
     printf("Press enter to continue!\n");
     getchar();
@@ -730,7 +732,7 @@ void printFriends (){
     Node *user = curr;
     printf ("\n[All Friends of %s]\nNo. Username\n", user->username);
     if (user->totalFriends==0){
-        printf ("You have no Friends yet\n");
+        printf ("\nYou have no Friends yet\n");
     }
     else {
         for (int i=0; i<user->totalFriends; i++){
