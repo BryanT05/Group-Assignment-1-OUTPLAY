@@ -53,6 +53,7 @@ int authen(const char *username){
   return flag;
 }
 
+
 int autenPassword(const char *password){
   int flag = 0;
   int len = strlen(password);
@@ -65,6 +66,7 @@ int autenPassword(const char *password){
   return flag;
 }
 
+
 void regis(){
   char pengguna[255]={0};
   int status = 1;
@@ -75,6 +77,7 @@ void regis(){
     status = authen(pengguna);
     if(status == 1)printf("Invalid username please try again!\n");
   }
+
   int statuspass = 1;
   char password[255]={0};
   while(statuspass){
@@ -85,6 +88,7 @@ void regis(){
     if(statuspass == 1)printf("Invalid password please try again!\n");
   }
   
+
   Node *regis= createNode(pengguna, password);
   if(!head){
     /*cek apakah usernamenya memenuhi ketentuan*/
