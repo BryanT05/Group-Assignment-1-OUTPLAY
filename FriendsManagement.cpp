@@ -114,7 +114,7 @@ void AddFriend (const char temp2[]){
         }
         curr= curr->next;
     }
-    if (flag && pass == 0){
+    if (flag && pass==0){
         printf ("\n--There is no %s in User List\n", newfriend);
     }
     printf("Press enter to continue!\n");
@@ -129,7 +129,7 @@ void viewInbox (const char temp2[]){
         user= user->next;
     }
 
-
+    int pass=0;
     printf ("\n[All Friend Request of %s]\n", user->username);
     printf ("No. Userame\n");
     for (int i=0; i < user->totalInbox; i++){
@@ -138,10 +138,12 @@ void viewInbox (const char temp2[]){
     char temp[255];
     if (user->totalInbox==0){
         printf ("Your Inbox is empty\n");
+        pass=-1;
     }
     else {
         printf ("\nWhich user do you want to be accepted?\n>>");
         scanf("%[^\n]", &temp); getchar();
+        pass=1;
     }
     int flag =1;
     for (int i=0; i< user->totalInbox; i++){
@@ -173,7 +175,7 @@ void viewInbox (const char temp2[]){
             break;
         }
     }
-    if (flag){
+    if (flag && pass==0){
         printf ("\n--There is no %s in your Friend Request\n", temp);
     }
     printf ("Press enter to continue!\n");
@@ -252,7 +254,6 @@ void removeFriend (const char temp2[]){
     if (flag==0) printf ("\nThere is no %s in your Firend List\n", temp);
     printf("Press enter to continue!\n");
 }
-
 
 int main (){
     // cuma bikin data nya aja
