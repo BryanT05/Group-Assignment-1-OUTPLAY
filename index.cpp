@@ -630,7 +630,6 @@ void AddFriend (){
     }
     printf("Press enter to continue!\n");
     getchar();
-    getchar();
 }
 
 void viewInbox(){
@@ -686,7 +685,6 @@ void viewInbox(){
     }
     printf ("Press enter to continue!\n");
     getchar();
-    getchar();
 }
 
 void viewSentRequest(){
@@ -703,7 +701,6 @@ void viewSentRequest(){
         }
     }
     printf("Press enter to continue!\n");
-    getchar();
     getchar();
 }
 
@@ -747,7 +744,6 @@ void removeFriend (){
     }
     if (flag==0) printf ("\nThere is no %s in your Firend List\n", temp);
     printf("Press enter to continue!\n");
-    getchar();
     getchar();
 }
 
