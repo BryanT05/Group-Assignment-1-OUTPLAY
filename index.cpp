@@ -184,7 +184,7 @@ void mainMenu(){
 
 void LoginScreen(){
   printf("Oo=====================================oO\n");
-  printf("Welcome, %s",curr->username);
+  printf("Welcome, %s\n",curr->username);
   printf("Oo=====================================oO\n\n");
   time_t t;
   time(&t);
@@ -206,22 +206,31 @@ void LoginScreen(){
   scanf("%d",&input);
 
         if (input==1){
+            getchar();
             AddFriend();
+            LoginScreen();
         }
         else if (input==2){
+            getchar();
             removeFriend();
+            LoginScreen();
         }
         else if (input==3){
+            getchar();
             viewInbox();
+            LoginScreen();
         }
         else if (input==4){
+            getchar();
             viewSentRequest();
+            LoginScreen();
         }
         else if (input==5){
             printf("Bukan bagian gue\n");
         }
         else if (input==6){
-            return;
+            getchar();
+            mainMenu();
         }
 
   printf("-----------------------------------------\n");
