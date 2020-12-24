@@ -3,6 +3,7 @@
 #include <time.h>
 #include <stdlib.h>
 
+int end = 0;
 struct Node{
   char username[30];
   char password[30];
@@ -86,6 +87,7 @@ void regis(){
   }
   
   Node *regis= createNode(pengguna, password);
+  printf("\n======= User Registered Successfully ========\n\n");
   if(!head){
     /*cek apakah usernamenya memenuhi ketentuan*/
     if(status==0){
@@ -101,24 +103,33 @@ void regis(){
 }
 
 void login(){
-  char username[30] = {0};
-  char password[30] = {0};
-  printf("Masukkan Username: ");
-  getchar();
-  scanf("%[^\n]",username);
-  printf("Masukkan Password: ");
-  getchar();
-  scanf("%[^\n]",password);
-  Node *temp = user_head;
+  end = 1;
   int success = 0;
-  while(temp){
-    if(strcmp(username,temp->username) == 0){
-      if(strcmp(password,temp->password) == 0){
-        success = 1;
+  while(!success){
+    char username[30] = {0};
+    char password[30] = {0};
+    printf("Masukkan Username: ");
+    getchar();
+    scanf("%[^\n]",username);
+    printf("Masukkan Password: ");
+    getchar();
+    scanf("%[^\n]",password);
+    Node *temp = user_head;
+    
+    while(temp){
+      if(strcmp(username,temp->username) == 0){
+        if(strcmp(password,temp->password) == 0){
+          success = 1;
+        }
       }
+      temp = temp->next;
     }
+    if(!success)printf("Invalid Username or Password please try again!\n");
   }
-  // if(success == 1) panggil function selanjutny
+  
+  if(success == 1){
+    printf("\n====== Login Successfull ======\n");
+  }
 }
 
 void mainMenu(){
@@ -145,21 +156,27 @@ void mainMenu(){
   int input = 0;
   scanf("%d",&input);
   if(input == 0){
+    end = 1;
     return;
   }else if(input == 1){
     regis();
   }else if(input == 2){
     login();
   }else if(input == 3){
+    end = 1;
     return;
   }
 }
 
-
+void caller(){
+  while(!end){
+    mainMenu();
+  }
+}
 
 int main(){
   clock_t begin = time(NULL);
-  mainMenu();
+  caller();
   clock_t end = time(NULL);
   printf("You have allocated %ld seconds of your time for this program\n",end-begin);
 }
