@@ -18,18 +18,18 @@ struct Node {
 } *head, *tail; 
 
 Node *createNode (const char name[]){
-    Node *newNode = (Node*) malloc (sizeof(Node));
+    Node *temp = (Node*) malloc (sizeof(Node));
 
-    strcpy (newNode ->username, name);
-    newNode -> totalfriends = 0;
-    newNode -> totalInbox = 0;
-    newNode -> totalSentRequest = 0;
-    newNode-> friends[0] = NULL;
-    newNode -> inbox[0]= NULL;
-    newNode ->request[0] =NULL;
-    
-    newNode-> next = newNode->prev = NULL;
-    return newNode;
+    strcpy (temp ->username, name);
+    temp -> totalfriends = 0;
+    temp -> totalInbox = 0;
+    temp -> totalSentRequest = 0;
+    temp-> friends[0] = NULL;
+    temp -> inbox[0]= NULL;
+    temp ->request[0] =NULL;
+
+    temp-> next = temp->prev = NULL;
+    return temp;
 }
 
 void pushHead (const char name[]){
