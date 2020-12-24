@@ -332,27 +332,33 @@ void addNote() {
     printf("Please input the note you want to replace:");
   }
   char note[255];
-  scanf("%[^\n]", note); getchar();
+  getchar();
+  scanf("%[^\n]", note);
   strcpy(curr1->Note, note);
   strcpy(curr1->RecNote,note);
-  dashboard ();
+  printf("You have added your note.\n");
+  dashboard();
+  
 }
 
 void editNote() {
   Node *curr1 = curr;
-  
+  int flag = 0;
   if(strcmp(curr1->Note, "\0") == 0) {
     printf("No notes to edit\n");
+    flag = 1;
     dashboard();
   }
 
   char note[260];
   printf("Current Note:%s\n", curr1->Note);
   printf("Input New Note:");
-  scanf("%[^\n]", note); getchar();
+  getchar();
+  scanf("%[^\n]", note);
   strcpy(curr1->Note, note);
   strcpy(curr1->RecNote, note);
-  dashboard ();
+  if(flag == 0)
+  dashboard();
 } 
 
 void deleteNote() {
@@ -371,7 +377,7 @@ void deleteNote() {
     curr1 = curr1->next;
   }
   strcpy(curr1->Note, " ");
-  dashboard ();
+  dashboard();
 }
 
 void recoverNote() {
@@ -380,7 +386,7 @@ void recoverNote() {
   strcpy(curr1->Note, curr1->RecNote);
   printf("Your note has been recovered.\n");
   printf("Your note: %s\n", curr1->Note);
-  dashboard ();
+  dashboard();
 }
 
 void category() {
@@ -409,7 +415,7 @@ void category() {
     scanf("%[^\n]", enter);
     category();
   }
-  return;
+  dashboard();
 }
 
 void announceNote() {
@@ -419,17 +425,17 @@ void announceNote() {
   printf("[1] Announce\n[2] Cancel\n");
   printf("Choose your option:");
   int n;
-  scanf("%d", &n); getchar ();
+  scanf("%d", &n);
   if(n == 1) {
     curr1->stats = 1;
     printf("Your note has been announced\n");
   }else if(n == 2) {
-    dashboard();
+    return;
   }else {
     puts("Invalid username, please try again.");
     announceNote();
   }
-  dashboard ();
+  dashboard();
 }
 
 void privateAccount() {
@@ -455,10 +461,11 @@ void privateAccount() {
   } else {
     puts("The lists of private friends are full, please click enter to continue");
     char enter[3];
+    getchar();
     scanf("%[^\n]", enter);
     dashboard();
   }
-  return;
+ return;
 }
 
 void commentNote(){
@@ -467,7 +474,7 @@ void commentNote(){
     printf("No other users\n");
   } else if(!curr->comment){
     printf("Write a comment: \n");
-    scanf("%[^\n]", curr->comment); getchar();
+    scanf("%[^\n]", curr->comment);
     printf("Do you want to like this comment ?\nY/N");
     char yesNO;
     scanf("%c", &yesNO);
@@ -479,7 +486,7 @@ void commentNote(){
   } else{
     displayComment();
     printf("Write a comment: \n");
-    scanf("%[^\n]", curr->comment); getchar ();
+    scanf("%[^\n]", curr->comment);
     printf("Do you want to like this comment ?\nY/N");
     char yesNO;
     scanf("%c", &yesNO);
@@ -489,7 +496,6 @@ void commentNote(){
       return;
     }
   }
-  dashboard();
 }
 
 void displayComment(){
@@ -505,10 +511,8 @@ void displayComment(){
 }
 
 void dashboard() {
-  
   tempdashboard();
-  
-  printf("[1] Add\n[2] Edit\n[3] Announce\n[4] Delete Note\n[5] Recover Note\n [6]Update Category\n[7] Private Your Account\n[8] Return\n");
+  printf("[1] Add\n[2] Edit\n[3] Announce\n[4] Delete Note\n[5] Recover Note\n[6] Update Category\n[7] Private Your Account\n[8] Return\n");
   printf("Choose Noting Option :");  
   int choice = 0;
   scanf("%d", &choice);
@@ -534,7 +538,7 @@ void dashboard() {
     printf("Invalid input, please try again.\n");
     dashboard();
   }
-  return;
+ 
 }
 
 
@@ -550,6 +554,11 @@ Node *createNode3 (const char name[]){
     temp-> friends[0] = NULL;
     temp -> inbox[0]= NULL;
     temp ->request[0] =NULL;
+    temp -> priv = 0;
+    temp-> stats=0;
+    strcpy(temp->RecNote,"\0");
+    strcpy(temp->Note, "\0");
+    strcpy(temp->privFriends[0], "\0");
 
     temp-> next = temp->prev = NULL;
     return temp;
@@ -642,7 +651,7 @@ void viewInbox(){
     Node *user = curr;
     
 
-    int pass=0;
+
     printf ("\n[All Friend Request of %s]\n", user->username);
     printf ("No. Userame\n");
     for (int i=0; i < user->totalInbox; i++){
@@ -650,8 +659,7 @@ void viewInbox(){
     }
     char temp[255];
     if (user->totalInbox==0){
-        printf ("\nYour Inbox is empty\n");
-        pass=1;
+        printf ("Your Inbox is empty\n");
     }
     else {
         printf ("\nWhich user do you want to be accepted?\n>>");
@@ -687,7 +695,7 @@ void viewInbox(){
             break;
         }
     }
-    if (flag && pass==0){
+    if (flag){
         printf ("\n--There is no %s in your Friend Request\n", temp);
     }
     printf ("Press enter to continue!\n");
@@ -699,14 +707,13 @@ void viewSentRequest(){
 
     printf ("\n[%s's Sent Request]\n", user->username);
     if(user->totalSentRequest==0){
-        printf ("\nYour Sent Request is empty\n");
+        printf ("Your Sent Request is empty\n");
     } 
     else {
         printf ("No. Username\n");
         for (int i=0; i< user->totalSentRequest; i++){
             printf ("%d   %s\n", i+1, user->request[i]->username);
         }
-        puts ("");
     }
     printf("Press enter to continue!\n");
     getchar();
@@ -716,7 +723,7 @@ void printFriends (){
     Node *user = curr;
     printf ("\n[All Friends of %s]\nNo. Username\n", user->username);
     if (user->totalFriends==0){
-        printf ("\nYou have no Friends yet\n");
+        printf ("You have no Friends yet\n");
     }
     else {
         for (int i=0; i<user->totalFriends; i++){
