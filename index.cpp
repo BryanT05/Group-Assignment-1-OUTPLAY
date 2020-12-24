@@ -480,6 +480,7 @@ void commentNote(){
     scanf("%[^\n]", curr->comment);
     printf("Do you want to like this comment ?\nY/N");
     char yesNO;
+    getchar();
     scanf("%c", &yesNO);
     if(yesNO=='Y'){
       curr->likes++;
