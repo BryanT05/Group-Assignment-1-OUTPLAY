@@ -291,7 +291,7 @@ void tempdashboard() {
   int j = 1;
   while(curr3) {
     if(curr3->stats == 0) {
-      if(curr2->priv == 0) {
+      if(curr3->priv == 0) {
       printf("%d. %s : %s\n", j, curr3->username, curr3->Note);
       j++;
       }else {
@@ -332,10 +332,10 @@ void addNote() {
     printf("Please input the note you want to replace:");
   }
   char note[255];
-  scanf("%[^\n]", note);
+  scanf("%[^\n]", note); getchar();
   strcpy(curr1->Note, note);
   strcpy(curr1->RecNote,note);
-  
+  dashboard ();
 }
 
 void editNote() {
@@ -349,10 +349,10 @@ void editNote() {
   char note[260];
   printf("Current Note:%s\n", curr1->Note);
   printf("Input New Note:");
-  scanf("%[^\n]", note);
+  scanf("%[^\n]", note); getchar();
   strcpy(curr1->Note, note);
   strcpy(curr1->RecNote, note);
-  return;
+  dashboard ();
 } 
 
 void deleteNote() {
@@ -371,6 +371,7 @@ void deleteNote() {
     curr1 = curr1->next;
   }
   strcpy(curr1->Note, " ");
+  dashboard ();
 }
 
 void recoverNote() {
@@ -379,6 +380,7 @@ void recoverNote() {
   strcpy(curr1->Note, curr1->RecNote);
   printf("Your note has been recovered.\n");
   printf("Your note: %s\n", curr1->Note);
+  dashboard ();
 }
 
 void category() {
@@ -417,7 +419,7 @@ void announceNote() {
   printf("[1] Announce\n[2] Cancel\n");
   printf("Choose your option:");
   int n;
-  scanf("%d", &n);
+  scanf("%d", &n); getchar ();
   if(n == 1) {
     curr1->stats = 1;
     printf("Your note has been announced\n");
@@ -427,6 +429,7 @@ void announceNote() {
     puts("Invalid username, please try again.");
     announceNote();
   }
+  dashboard ();
 }
 
 void privateAccount() {
@@ -464,7 +467,7 @@ void commentNote(){
     printf("No other users\n");
   } else if(!curr->comment){
     printf("Write a comment: \n");
-    scanf("%[^\n]", curr->comment);
+    scanf("%[^\n]", curr->comment); getchar();
     printf("Do you want to like this comment ?\nY/N");
     char yesNO;
     scanf("%c", &yesNO);
@@ -476,7 +479,7 @@ void commentNote(){
   } else{
     displayComment();
     printf("Write a comment: \n");
-    scanf("%[^\n]", curr->comment);
+    scanf("%[^\n]", curr->comment); getchar ();
     printf("Do you want to like this comment ?\nY/N");
     char yesNO;
     scanf("%c", &yesNO);
@@ -486,6 +489,7 @@ void commentNote(){
       return;
     }
   }
+  dashboard();
 }
 
 void displayComment(){
@@ -501,7 +505,9 @@ void displayComment(){
 }
 
 void dashboard() {
+  
   tempdashboard();
+  
   printf("[1] Add\n[2] Edit\n[3] Announce\n[4] Delete Note\n[5] Recover Note\n [6]Update Category\n[7] Private Your Account\n[8] Return\n");
   printf("Choose Noting Option :");  
   int choice = 0;
