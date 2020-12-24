@@ -164,7 +164,7 @@ void mainMenu(){
   Node *curr = user_head;
   int num = 1;
   while(curr){
-    printf("%d   %s\n",num,user_head->username);
+    printf("%d   %s\n",num, curr->username);
     num++;
     curr = curr->next;
   }
