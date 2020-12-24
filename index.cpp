@@ -412,6 +412,7 @@ void category() {
     printf("Invalid input, please try again.\n");
     printf("Please press enter to continue");
     char enter[3];
+    getchar();
     scanf("%[^\n]", enter);
     category();
   }
@@ -446,6 +447,7 @@ void privateAccount() {
     printf("Please input the unique username you want your note avaialble to:");
     char name[260];
     int flag = 0;
+    getchar();
     scanf("%[^\n]", name);
     for(int i = 0; i<curr1->numpriv; i++) {
       if(strcmp(curr1->privFriends[i], name) == 0){
@@ -491,6 +493,7 @@ void commentNote(){
     scanf("%[^\n]", curr->comment);
     printf("Do you want to like this comment ?\nY/N");
     char yesNO;
+    getchar();
     scanf("%c", &yesNO);
     if(yesNO=='Y'){
       curr->likes++;
@@ -504,6 +507,7 @@ void displayComment(){
   printf("%s\n", curr->comment);
   printf("Do you want to like this comment ?\nY/N");
   char yesNO;
+  getchar();
   scanf("%c", &yesNO);
   if(yesNO=='Y'){
     curr->likes++;
