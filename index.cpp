@@ -4,20 +4,24 @@
 #include <stdlib.h>
 
 int end = 0;
+struct inbox{
+  char message[255];
+  inbox *next;
+}
 struct Node{
+  Node *friendsHead,*friendsTail;
+  inbox *inboxHead, *inboxTail;
+  Node *request[100];
+  Node *next,*prev;
   char username[30];
   char password[30];
-  Node *friends[100];
   int totalFriends;
-  Node *inbox[100];
-  Node *request[100];
   int totalSentRequest;
   int totalInbox;
   int priv;
   int numpriv;
   int likes;
   char privFriends[2][100];
-  Node *next,*prev;
   char Note[260];
   char RecNote[260];
   char category[20];
